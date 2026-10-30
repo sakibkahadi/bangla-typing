@@ -5,6 +5,22 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 const DEFAULT_TEXT =
   "বাংলা আমার মাতৃভাষা। আমরা বাংলায় কথা বলি, বাংলায় গান গাই এবং বাংলায় স্বপ্ন দেখি। প্রতিদিন কিছুক্ষণ অনুশীলন করলে টাইপিং গতি ও নির্ভুলতা দুটোই বাড়ে। ধৈর্য ধরে নিয়মিত চর্চা করুন, সফলতা আসবেই।";
 
+const ENGLISH_JAPAN_VISIT_TEXT = `Bangladesh is a country in South Asia. It is home to many people, rivers, farms, and busy cities. In October 2026, Prime Minister Tarique Rahman made a visit to Japan. The recent visit was an important moment for Bangladesh and Japan. It gave leaders and business people a chance to meet, share ideas, and talk about the future.
+
+Japan is an island country in East Asia. It is known for its careful planning, modern trains, strong schools, and advanced technology. Bangladesh is known for its hard-working people, rich culture, and growing economy. The two countries have different histories and ways of life, but they can still learn from one another. Friendly ties can bring new chances for people in both countries.
+
+During the visit, leaders from Bangladesh and Japan held talks. They discussed ways to build a stronger relationship. Business leaders also met at an economic forum. They talked about trade, investment, jobs, and useful technology. These discussions do not mean that every plan is ready or every promise has been made. They are a first step toward learning what both sides need and how they may work together.
+
+Bangladesh wants to improve roads, ports, power, education, and public services. Japanese companies have experience in many of these areas. If the two countries make good plans, new projects may help people and businesses. Investment can support factories, create jobs, and help workers learn new skills. Projects should be fair, safe, and helpful for local communities.
+
+Education and training can also connect the two countries. Young people in Bangladesh can learn about science, engineering, computers, and business. Japanese experts and Bangladeshi workers can share knowledge. Students can learn about each other's language and culture. This kind of exchange can build trust. It can also help young people prepare for work in a changing world.
+
+The visit was not only about trade and money. It was also about respect and friendship. Bangladesh and Japan have worked together for many years. People from both countries can enjoy each other's food, music, art, and traditions. When leaders meet, they can support these links and encourage more people to visit, study, and work together.
+
+After a visit, the most important work happens at home. Officials must follow up on the ideas from the meetings. They need to study plans, share information, and agree on clear steps. Businesses must decide whether a project is useful and affordable. People should be able to understand how new projects may affect their lives. Good cooperation takes time, patience, and honest communication.
+
+Tarique Rahman's visit to Japan showed the value of meeting face to face. It created space for discussion and gave both sides a chance to consider future cooperation. The results will depend on the work that follows. If Bangladesh and Japan keep talking and make practical plans, their partnership may grow stronger. Such a partnership can support jobs, learning, and development. Most of all, it can bring people closer and help both countries build a better future together.`;
+
 const PRESETS = [
   ["যুক্তবর্ণ ১ – ক্ষ, ক্ত", "শিক্ষক ছাত্রছাত্রীদের সুশিক্ষা দেন। অক্ষর চিনে নিলে বাক্য লেখা সহজ হয়। বক্তা মঞ্চে দাঁড়িয়ে স্পষ্ট ভাষায় বক্তব্য রাখলেন। রক্ত, মুক্ত, শক্ত, ভক্ত ও যুক্ত শব্দগুলো মনোযোগ দিয়ে টাইপ করো। পক্ষী আকাশে উড়ে যায়, আর লক্ষ্য ঠিক রাখলে সফলতা আসে।"],
   ["যুক্তবর্ণ ২ – স্ত, স্থ, স্ব, স্ম", "স্বাস্থ্য ভালো রাখতে প্রতিদিন সকালে হাঁটা উচিত। স্মৃতিশক্তি বাড়াতে সুস্থ থাকা দরকার। স্টেশনে গিয়ে দেখি ট্রেন স্থগিত হয়েছে। স্পষ্ট করে বললে সমস্যার সমাধান হয়। ব্যস্ত রাস্তায় সাবধানে হাঁটা বুদ্ধিমানের কাজ।"],
@@ -18,6 +34,7 @@ const PRESETS = [
   ["সংবাদ ধাঁচ – আবহাওয়া", "আবহাওয়া অধিদপ্তর জানিয়েছে, বঙ্গোপসাগরে সৃষ্ট লঘুচাপের প্রভাবে দেশের উপকূলীয় অঞ্চলে বৃষ্টি হতে পারে। সমুদ্রবন্দরগুলোকে সতর্ক সংকেত দেখাতে বলা হয়েছে। মৎস্যজীবীদের গভীর সাগরে যেতে নিষেধ করা হয়েছে। দুর্যোগ ব্যবস্থাপনা কর্তৃপক্ষ আশ্রয়কেন্দ্রগুলো প্রস্তুত রাখার নির্দেশ দিয়েছে।"],
   ["সংবাদ ধাঁচ – প্রযুক্তি", "তথ্যপ্রযুক্তি খাতে দক্ষ জনশক্তি তৈরির লক্ষ্যে নতুন প্রশিক্ষণ কর্মসূচি চালু হচ্ছে। কৃত্রিম বুদ্ধিমত্তা, সাইবার নিরাপত্তা ও সফটওয়্যার উন্নয়নে তরুণদের আগ্রহ বাড়ছে। উদ্যোক্তারা বলছেন, স্টার্টআপ সংস্কৃতি গড়ে তুলতে সহজ শর্তে মূলধন ও পর্যাপ্ত অবকাঠামো প্রয়োজন। অনলাইনে লেনদেন বাড়ার সঙ্গে সঙ্গে ডিজিটাল নিরাপত্তার গুরুত্বও বেড়েছে।"],
   ["সম্পাদকীয় ধাঁচ – সড়ক নিরাপত্তা", "সড়ক দুর্ঘটনা রোধে কঠোর আইন প্রয়োগের বিকল্প নেই। প্রতিদিনই সংবাদপত্রের পাতায় দুর্ঘটনার খবর ছাপা হচ্ছে, অথচ প্রতিকারের উদ্যোগ নেহাতই সীমিত। চালকদের প্রশিক্ষণ, যানবাহনের ফিটনেস পরীক্ষা এবং পথচারীদের সচেতনতা বৃদ্ধির ওপর জোর দিতে হবে। রাষ্ট্র ও সমাজ উভয়কেই দায়িত্ব নিতে হবে, নইলে প্রাণহানির এই মিছিল থামবে না।"],
+  ["English - Tarique Rahman's Japan Visit (500 words)", ENGLISH_JAPAN_VISIT_TEXT, false],
   ["যুক্তবর্ণ অনুশীলন – সব সাধারণ যুক্তবর্ণ", "ক্ক ক্ট ক্ত ক্ত্র ক্ন ক্ব ক্ম ক্য ক্র ক্ল ক্ষ ক্ষ্ণ ক্ষ্ম ক্ষ্য ক্ষ্ব। গ্ধ গ্ন গ্ম গ্য গ্র গ্ল ঘ্ন ঙ্ক ঙ্খ ঙ্গ ঙ্ঘ ঙ্ম। চ্চ চ্ছ চ্ঞ ঞ্চ ঞ্ছ ঞ্জ ঞ্ঝ জ্জ জ্ঝ জ্ঞ। ট্ট ট্র ড্ড ড্র ণ্ট ণ্ঠ ণ্ড ণ্ঢ ণ্ণ ণ্ব ণ্ম। ত্ত ত্থ ত্ন ত্ব ত্ম ত্য ত্র থ্ব দ্গ দ্ঘ দ্দ দ্ধ দ্ভ দ্ম দ্য দ্র দ্ব। ন্ট ন্ঠ ন্ড ন্ত ন্থ ন্দ ন্ধ ন্ন ন্ব ন্ম ন্য প্ট প্ত প্ন প্প প্স প্য প্র প্ল। ফ্ট ফ্র ব্জ ব্দ ব্ধ ব্ব ব্য ব্র ব্ল ভ্র ম্ন ম্প ম্ফ ম্ব ম্ভ ম্ম ম্য ম্র ম্ল। ল্ক ল্গ ল্ট ল্ড ল্প ল্ফ ল্ব ল্ম ল্ল শ্চ শ্ছ শ্ন শ্ব শ্ম শ্য শ্র শ্ল। ষ্ক ষ্ট ষ্ঠ ষ্ণ ষ্প ষ্ফ ষ্ম স্ক স্খ স্ট স্ত স্থ স্ন স্প স্ফ স্ব স্ম স্য স্র স্ল। হ্ণ হ্ন হ্ম হ্য হ্র হ্ল হ্ব। প্রতিটি যুক্তবর্ণ মনোযোগ দিয়ে পড়ে ও টাইপ করে অনুশীলন করুন।"],
 ];
 
@@ -127,12 +144,92 @@ export default function Home() {
   const [totalMs, setTotalMs] = useState(60000);
   const [now, setNow] = useState(0);
   const [resultTitle, setResultTitle] = useState("");
+  const [showColorFeedback, setShowColorFeedback] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const inputRef = useRef(null);
+  const modalCloseRef = useRef(null);
   const startRef = useRef(null);
   const timerRef = useRef(null);
   const target = useMemo(() => segment(normalizedText(sourceText)), [sourceText]);
   const typed = useMemo(() => segment(typedText.normalize("NFC")), [typedText]);
   const conjuncts = useMemo(() => getConjuncts(sourceText), [sourceText]);
+  const wordErrors = useMemo(() => {
+    const expectedWords = normalizedText(sourceText).split(" ").filter(Boolean);
+    const typedWords = typedText.normalize("NFC").trim().split(/\s+/).filter(Boolean);
+    const errors = [];
+    const costs = Array.from({ length: expectedWords.length + 1 }, () => Array(typedWords.length + 1).fill(0));
+    const actions = Array.from({ length: expectedWords.length + 1 }, () => Array(typedWords.length + 1).fill(""));
+
+    for (let expectedIndex = expectedWords.length; expectedIndex >= 0; expectedIndex--) {
+      for (let typedIndex = typedWords.length; typedIndex >= 0; typedIndex--) {
+        if (typedIndex === typedWords.length) continue;
+        if (expectedIndex === expectedWords.length) {
+          costs[expectedIndex][typedIndex] = typedWords.length - typedIndex;
+          actions[expectedIndex][typedIndex] = "extra";
+          continue;
+        }
+
+        const expected = expectedWords[expectedIndex];
+        const actual = typedWords[typedIndex];
+        if (expected === actual) {
+          costs[expectedIndex][typedIndex] = costs[expectedIndex + 1][typedIndex + 1];
+          actions[expectedIndex][typedIndex] = "match";
+          continue;
+        }
+
+        const choices = [
+          { action: "missing", cost: 1 + costs[expectedIndex + 1][typedIndex] },
+          { action: "incorrect", cost: 1 + costs[expectedIndex + 1][typedIndex + 1] },
+          { action: "extra", cost: 1 + costs[expectedIndex][typedIndex + 1] },
+        ];
+        const best = choices.reduce((current, choice) => choice.cost < current.cost ? choice : current);
+        costs[expectedIndex][typedIndex] = best.cost;
+        actions[expectedIndex][typedIndex] = best.action;
+      }
+    }
+
+    let expectedIndex = 0;
+    let typedIndex = 0;
+    while (typedIndex < typedWords.length) {
+      const action = actions[expectedIndex][typedIndex];
+      if (action === "match") {
+        expectedIndex++;
+        typedIndex++;
+      } else if (action === "missing") {
+        errors.push({ number: expectedIndex + 1, expected: expectedWords[expectedIndex], actual: "", type: "missing" });
+        expectedIndex++;
+      } else if (action === "extra") {
+        errors.push({ number: expectedIndex + 1, expected: "", actual: typedWords[typedIndex], type: "extra" });
+        typedIndex++;
+      } else {
+        const expected = expectedWords[expectedIndex];
+        const actual = typedWords[typedIndex];
+        errors.push({
+          number: expectedIndex + 1,
+          expected,
+          actual,
+          type: expected.toLowerCase() === actual.toLowerCase() ? "case" : "incorrect",
+        });
+        expectedIndex++;
+        typedIndex++;
+      }
+    }
+    return errors;
+  }, [sourceText, typedText]);
+  const spaceErrors = useMemo(() => {
+    const expectedSpaces = normalizedText(sourceText).match(/\s+/g) || [];
+    const typedSpaces = typedText.normalize("NFC").match(/\s+/g) || [];
+    const typedWords = typedText.normalize("NFC").trim().split(/\s+/).filter(Boolean);
+    const relevantExpectedSpaces = expectedSpaces.slice(0, Math.max(typedWords.length - 1, typedSpaces.length));
+    const errors = [];
+    for (let index = 0; index < Math.max(relevantExpectedSpaces.length, typedSpaces.length); index++) {
+      const expected = relevantExpectedSpaces[index] || "";
+      const actual = typedSpaces[index] || "";
+      if (expected !== actual) errors.push({ number: index + 1, expected, actual });
+    }
+    return errors;
+  }, [sourceText, typedText]);
+  const totalErrors = wordErrors.length + spaceErrors.length;
 
   const selectedMinutes = () => {
     const value = duration === "custom" ? Number.parseFloat(customMinutes) : Number.parseFloat(duration);
@@ -172,6 +269,7 @@ export default function Home() {
       ? (duration === "custom" ? Number.parseFloat(customMinutes) : Number.parseFloat(duration)) * 60000
       : 60000);
     setResultTitle("");
+    setShowResultModal(false);
   }, [sourceText, duration, customMinutes]);
 
   const finish = useCallback((title) => {
@@ -179,11 +277,22 @@ export default function Home() {
     timerRef.current = null;
     setFinished(true);
     setResultTitle(title);
+    setShowResultModal(true);
   }, []);
 
   useEffect(() => () => {
     if (timerRef.current) clearInterval(timerRef.current);
   }, []);
+
+  useEffect(() => {
+    if (!showResultModal) return;
+    modalCloseRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setShowResultModal(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showResultModal]);
 
   useEffect(() => {
     if (!started || finished || startedAt === null) return;
@@ -218,11 +327,11 @@ export default function Home() {
 
   const referenceContent = target.map((character, index) => {
     let className = "";
-    if (index < typed.length) {
+    if (showColorFeedback && index < typed.length) {
       if (typed[index] === character) className = "ok";
       else if (stats.pending && index === typed.length - 1) className = "cur";
       else className = "bad";
-    } else if (index === typed.length && !stats.pending && !finished) className = "cur";
+    } else if (showColorFeedback && index === typed.length && !stats.pending && !finished) className = "cur";
     return <span className={className} key={`${index}-${character}`}>{character}</span>;
   });
 
@@ -236,6 +345,7 @@ export default function Home() {
     setStartedAt(null);
     setNow(0);
     setResultTitle("");
+    setShowResultModal(false);
   };
 
   const fontStyle = { fontFamily: FONT_FAMILIES[font], fontSize: `${fontSize}px` };
@@ -263,13 +373,33 @@ export default function Home() {
         <div className="group"><div className="row">
           <select value={preset} onChange={(e) => {
             setPreset(e.target.value);
-            if (e.target.value !== "") reset(expandPreset(PRESETS[Number(e.target.value)][1]));
+            if (e.target.value !== "") {
+              const [, text, shouldExpand = true] = PRESETS[Number(e.target.value)];
+              reset(shouldExpand ? expandPreset(text) : text);
+            }
           }} aria-label="Practice text" className="preset-select">
             <option value="">Custom (type or paste)</option>
             {PRESETS.map(([label], index) => <option value={String(index)} key={label}>{label}</option>)}
           </select>
         </div><small>Text</small></div>
+        <div className="group"><div className="row">
+          <label className="switch-label">
+            <input
+              type="checkbox"
+              role="switch"
+              checked={showColorFeedback}
+              onChange={(e) => setShowColorFeedback(e.target.checked)}
+              aria-label="Show live color feedback"
+            />
+            <span className="switch-track" aria-hidden="true"><span /></span>
+            <span>Color feedback</span>
+          </label>
+        </div><small>Typing feedback</small></div>
         <div className="group"><div className="row"><button className="primary" onClick={() => { reset(); inputRef.current?.focus(); }}>Restart</button></div><small>Practice</small></div>
+        {finished && !showResultModal && <div className="group last-result-group">
+          <div className="row"><button type="button" onClick={() => setShowResultModal(true)}>Last result</button></div>
+          <small>Results</small>
+        </div>}
         </section>
       </div>
 
@@ -325,9 +455,57 @@ export default function Home() {
               <div><b>{stats.words}</b><span>Words typed</span></div>
               <div><b>{formatTime(stats.elapsed)}</b><span>Time used</span></div>
             </div>
+            <p className="error-count">Total errors: {totalErrors} (words: {wordErrors.length}, spaces: {spaceErrors.length})</p>
           </section>}
         </section>
       </div>
+
+      {showResultModal && <div className="modal-backdrop">
+        <section className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-modal-title">
+          <div className="modal-heading">
+            <h2 id="result-modal-title">{resultTitle}</h2>
+            <button ref={modalCloseRef} type="button" onClick={() => setShowResultModal(false)} aria-label="Close results">×</button>
+          </div>
+          <div className="grid">
+            <div><b>{stats.wpm}</b><span>WPM</span></div>
+            <div><b>{Math.round(stats.accuracy)}%</b><span>Accuracy</span></div>
+            <div><b>{stats.wrongChars}</b><span>Wrong characters</span></div>
+            <div><b>{stats.words}</b><span>Words typed</span></div>
+            <div><b>{formatTime(stats.elapsed)}</b><span>Time used</span></div>
+          </div>
+          <h3 className="error-heading">Word errors: {wordErrors.length}</h3>
+          {wordErrors.length > 0 ? (
+            <ol className="error-list">
+              {wordErrors.map(({ number, expected, actual, type }) => (
+                <li key={`${number}-${type}`}>
+                  <strong>Word {number}:</strong>{" "}
+                  {type === "missing"
+                    ? <>Missing — expected “{expected}”</>
+                    : type === "extra"
+                      ? <>Extra word — typed “{actual}”</>
+                      : type === "case"
+                        ? <>Capitalization error — typed “{actual}”, expected “{expected}”</>
+                      : <>Typed “{actual}”, expected “{expected}”</>}
+                </li>
+              ))}
+            </ol>
+          ) : <p className="note">No word errors. Great job!</p>}
+          <h3 className="error-heading">Space errors: {spaceErrors.length}</h3>
+          {spaceErrors.length > 0 ? (
+            <ol className="error-list">
+              {spaceErrors.map(({ number, expected, actual }) => (
+                <li key={`space-${number}`}>
+                  <strong>Space {number}:</strong>{" "}
+                  {actual
+                    ? <>Typed {JSON.stringify(actual)}, expected {expected ? JSON.stringify(expected) : "no space"}</>
+                    : <>Missing a space; expected {JSON.stringify(expected)}</>}
+                </li>
+              ))}
+            </ol>
+          ) : <p className="note">No space errors. Great job!</p>}
+          <p className="error-count">Total errors: {totalErrors}</p>
+        </section>
+      </div>}
 
       <footer className="status">
         <span>Page 1 of 1</span><span>Words: {stats.words}</span><span>Time: {formatTime(remaining)}</span><span>WPM: {stats.wpm}</span><span>Accuracy: {Math.round(stats.accuracy)}%</span>

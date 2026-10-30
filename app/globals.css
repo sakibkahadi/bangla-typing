@@ -15,12 +15,20 @@ button, select, input, textarea { font: inherit; }
 .group { padding: 8px 14px 4px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
 .group .row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .group small { color: var(--muted); text-align: center; font-size: 11px; }
+.last-result-group { margin-left: auto; }
 select, input[type="number"], button { color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 3px; padding: 4px 8px; }
 input[type="number"] { width: 78px; }
 button { cursor: pointer; }
 button.primary { background: var(--title); border-color: var(--title); color: #fff; }
 button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--title); outline-offset: 1px; }
 .preset-select { max-width: 240px; }
+.switch-label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap; }
+.switch-label input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.switch-track { width: 34px; height: 19px; padding: 2px; border-radius: 12px; background: #888; transition: background .15s ease; }
+.switch-track span { display: block; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: transform .15s ease; }
+.switch-label input:checked + .switch-track { background: var(--title); }
+.switch-label input:checked + .switch-track span { transform: translateX(15px); }
+.switch-label input:focus-visible + .switch-track { outline: 2px solid var(--title); outline-offset: 2px; }
 .practice-layout { display: grid; grid-template-columns: minmax(210px, 250px) minmax(0, 1fr); align-items: start; gap: 14px; padding: 14px; }
 .setup { min-width: 0; padding: 12px; background: var(--rib); border: 1px solid var(--line); border-radius: 3px; }
 .setup label { display: block; margin-bottom: 4px; color: var(--muted); }
@@ -48,6 +56,15 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
 .grid div { border: 1px solid var(--line); padding: 8px 10px; }
 .grid b { display: block; font-size: 22px; font-weight: 600; }
 .grid span { color: var(--muted); font-size: 12px; }
+.error-count { margin: 12px 0 0; font-weight: 600; }
+.modal-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; overflow-y: auto; padding: 20px; background: rgba(0, 0, 0, .55); }
+.result-modal { width: min(720px, 100%); max-height: min(85vh, 760px); overflow-y: auto; background: var(--page); border-radius: 6px; box-shadow: 0 8px 32px rgba(0, 0, 0, .3); padding: 20px; }
+.modal-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.modal-heading h2 { margin: 0; font-size: 20px; }
+.modal-heading button { width: 34px; height: 34px; padding: 0; font-size: 24px; line-height: 1; }
+.error-heading { margin: 18px 0 8px; font-size: 16px; }
+.error-list { max-height: 34vh; overflow-y: auto; margin: 0; padding: 0 0 0 28px; }
+.error-list li { padding: 5px 0; overflow-wrap: anywhere; }
 @media (max-width: 760px) {
   .practice-layout { grid-template-columns: minmax(0, 1fr); }
   .setup { max-width: 100%; }
